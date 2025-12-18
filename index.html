@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Riya ❤️</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { margin: 0; font-family: 'Segoe UI', 'Helvetica Neue', sans-serif; background: linear-gradient(135deg, #ffdde1, #ee9ca7); color: #2b2b2b; display: flex; justify-content: center; overflow-x: hidden; min-height: 100vh; }
+.hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; pointer-events: none; }
+.heart { position: absolute; font-size: 30px; opacity: 0.3; animation: float 20s infinite ease-in-out; pointer-events: none; }
+.container { max-width: 900px; padding: 40px 30px; position: relative; z-index: 1; }
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.8s ease-in-out; }
+h1, h2 { text-align: center; text-shadow: 2px 2px 12px rgba(255,255,255,0.6); margin-bottom: 30px; letter-spacing: 0.5px; }
+h1 { font-size: 3em; animation: heartbeat 2s infinite; background: linear-gradient(135deg, #ff5f7e, #c9426b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 35px; }
+h2 { font-size: 1.6em; color: #c9426b; margin-top: 20px; margin-bottom: 35px; }
+.intro { text-align: center; font-size: 1.2em; margin-bottom: 30px; line-height: 1.9; padding: 20px; background: rgba(255,255,255,0.4); border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.5); }
+.buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+button { background: linear-gradient(135deg, #ffffff, #ffe6eb); border: 2px solid rgba(255, 95, 126, 0.3); padding: 18px 16px; border-radius: 14px; font-size: 1.02em; cursor: pointer; transition: all 0.25s ease; position: relative; overflow: hidden; font-weight: 500; color: #c9426b; box-shadow: 0 5px 15px rgba(255, 95, 126, 0.12); }
+button:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(255, 95, 126, 0.18); }
+.message-box { background: rgba(255,255,255,0.95); padding: 28px 22px; border-radius: 18px; margin-top: 20px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 2px solid rgba(255, 95, 126, 0.15); font-size: 1.05em; line-height: 1.8; text-align: center; position: relative; }
+.timeline { position: relative; padding-left: 50px; margin-top: 30px; }
+.timeline::before { content: ''; position: absolute; left: 18px; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #ff5f7e, #ff9eb3); border-radius: 2px; box-shadow: 0 0 15px rgba(255, 95, 126, 0.4); }
+.event { margin-bottom: 40px; position: relative; }
+.event::before { content: '❤️'; position: absolute; left: -41px; top: 5px; font-size: 22px; animation: heartPulse 1.5s infinite; }
+.event h3 { margin: 0 0 10px; color: #c9426b; font-size: 1.2em; }
+.event p { line-height: 1.8; background: rgba(255,255,255,0.75); padding: 14px 16px; border-radius: 12px; font-size: 1.0em; position: relative; }
+.footer { text-align: center; margin-top: 40px; font-size: 1.05em; line-height: 1.8; padding: 22px 18px; background: rgba(255,255,255,0.35); border-radius: 14px; border: 2px solid rgba(255,255,255,0.4); position: relative; }
+.rabbit-counter { position: fixed; top: 20px; right: 20px; background: rgba(255,255,255,0.95); padding: 10px 16px; border-radius: 40px; font-size: 1.0em; font-weight: 600; color: #c9426b; box-shadow: 0 6px 22px rgba(0,0,0,0.08); z-index: 500; display: none; border: 2px solid rgba(255, 95, 126, 0.18); }
+.secret-message { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: rgba(255,255,255,0.98); padding: 28px; border-radius: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); z-index: 600; max-width: 640px; width: 92%; text-align: center; font-size: 1.05em; line-height: 1.8; color: #c9426b; border: 3px solid #ff5f7e; pointer-events: none; }
+.secret-message.show { animation: popIn 0.45s ease-out forwards; pointer-events: all; }
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); z-index: 550; display: none; pointer-events: none; }
+.overlay.show { display: block; animation: fadeIn 0.25s ease-in-out; pointer-events: all; }
+.clickable-word { font-weight: 600; cursor: pointer; display: inline-block; border-bottom: 2px dotted rgba(201,66,107,0.10); transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease; }
+.clickable-word.found { opacity: 0.5; text-decoration: line-through; transform: translateY(-2px); }
+.trophy { position: fixed; left: 50%; top: 28%; transform: translate(-50%, -50%) scale(0); font-size: 64px; z-index: 700; pointer-events: none; opacity: 0; transition: transform 0.35s cubic-bezier(0.2,1,0.3,1), opacity 0.35s ease; }
+.trophy.show { transform: translate(-50%, -50%) scale(1.15) rotate(-8deg); opacity: 1; animation: popIn 0.45s ease-out; }
+.final-letter { text-align: left; line-height: 1.7; }
+.quiz-input { width: 100%; padding: 12px; margin: 12px 0; border: 2px solid #ff5f7e; border-radius: 12px; font-size: 1em; text-align: center; outline: none; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes heartbeat { 0%,100%{transform:scale(1);}10%{transform:scale(1.06);}20%{transform:scale(1);} }
+@keyframes heartPulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.25);} }
+@keyframes float { 0%,100%{ transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.3;} 25%{ transform: translateY(-80px) translateX(50px) rotate(8deg); opacity: 0.5;} 50%{ transform: translateY(-160px) translateX(-30px) rotate(-8deg); opacity: 0.3;} 75%{ transform: translateY(-80px) translateX(-50px) rotate(5deg); opacity: 0.5;} }
+@keyframes popIn { 0%{ transform: translate(-50%, -50%) scale(0); } 60%{ transform: translate(-50%, -50%) scale(1.08);} 100%{ transform: translate(-50%, -50%) scale(1); } }
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+<div class="rabbit-counter" id="rabbitCounter" onclick="openFinalChallenge()">🐰 <span id="rabbitCount">0</span>/6</div>
+<div class="overlay" id="overlay" onclick="closeSecret()"></div>
+<div class="secret-message" id="secretMessage"></div>
+<div class="trophy" id="trophy">🐰</div>
+
+<div class="container">
+
+<div id="mainPage" class="page active">
+    <h1>For Riya ❤️</h1>
+    <p class="intro">
+        <span class="clickable-word" data-rabbit="0">I</span> made this little world just for you. Happy Birthday, my love. 💗
+        <br><br>
+        This little space is just for you love. For whenever you miss me, feel low, or just want to smile.
+        <br><br>
+        In this little world I made for you, some words hide tiny surprises. Find them, click them, and a little rabbit will cheer for you.
+    </p>
+
+    <h2>Click whenever you feel something 💭</h2>
+
+    <div class="buttons">
+        <button onclick="showMessage('sad')">💙 When you're sad</button>
+        <button onclick="showMessage('miss')">💗 When you miss me</button>
+        <button onclick="showMessage('tired')">💜 When you're tired</button>
+        <button onclick="showMessage('doubt')">💛 When you doubt us</button>
+        <button onclick="showMessage('happy')">💖 When you're happy</button>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+
+    <div class="nav-button" style="text-align:center; margin-top:18px;">
+        <button onclick="showPage('timeline')" style="background: linear-gradient(135deg, #ff5f7e, #ff9eb3); color: white; padding: 14px 30px; font-size: 1.02em;">✨ View Our Story ✨</button>
+    </div>
+
+    <div class="footer" id="footer">
+        I may not be there today, but my heart is always with you. <span class="clickable-word" data-rabbit="5">babe</span>
+    </div>
+</div>
+
+<div id="timelinePage" class="page">
+    <h1>Our Story 💞</h1>
+
+    <div class="timeline">
+        <div class="event">
+            <h3>5 December 2023</h3>
+            <p>That day we said yes to each other in our own little way. You made my ordinary feel like a home. Finally understood what <span class="clickable-word" data-rabbit="1">love</span> is.</p>
+        </div>
+        <div class="event">
+            <h3>First Long Calls</h3>
+            <p>We talked about everything and nothing. You made silence feel safe. <span class="clickable-word" data-rabbit="2">You</span> made me feel loved babe.</p>
+        </div>
+        <div class="event">
+            <h3>Hard Days</h3>
+            <p>We learned patience, forgiveness, and how to hold on. Sometimes the smallest words carry the biggest meaning. Even <span class="clickable-word" data-rabbit="3">so</span>, we sprang back together after fights.</p>
+        </div>
+        <div class="event">
+            <h3>2 Years Together</h3>
+            <p>Two years later and every day still feels new because of you. I'm still amazed. So <span class="clickable-word" data-rabbit="4">much</span> memories together.</p>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:18px;">
+        <button onclick="showPage('main')" style="background: linear-gradient(135deg, #ff5f7e, #ff9eb3); color: white; padding: 14px 30px; font-size: 1.02em;">← Back to Messages</button>
+    </div>
+
+    <div class="footer" style="margin-top:22px;">
+        Every moment with you is a memory I treasure. Every day with you is a gift. I love you always.
+    </div>
+</div>
+
+</div>
+
+<script>
+let rabbitsFound = 0;
+const totalRabbits = 6;
+const foundRabbits = new Set();
+let wrongAttempts = 0;
+
+const secretMessages = [
+    "Yay! You found me, cutu baby! 🐰 Your smile is my favorite thing my Ribun! ✨",
+    "Peek-a-boo! You're stronger than you know and every little win of yours makes me proud. 💪💕",
+    "Oh my heart! You found me again 🥺 your smile is the best thing in my universe. Never stop being you. 😊",
+    "Ribun, you caught me! Distance means nothing when someone means everything. I adore you, always. 💕",
+    "What a champ! Two years and counting. Let's see what the next year holds for us ( adventures ) 🥂",
+    "You are such a pro at finding these cute rabbits. I am also a pro at finding my own hehe 🎂💖"
+];
+
+const wrongAnswers = [
+    "Haw! You don't even know me! 😤 Try again, Ribun!",
+    "🥺 I wish you knew... Think harder!",
+    "Really? REALLY?! 🐰💔 Come on, you know this!",
+    "Wrong answer bunny! 🐰😤 One more try!",
+    "Nope nope nope! 🙅‍♀️ Think about us...",
+    "So close, yet so far! 🐰✨ Try once more!"
+];
+
+const messages = {
+    sad: "You don't look pretty when you are sad babe. That smiling face of yours just makes me sooooooo happy my cutu baby.",
+    miss: "If you miss me, remember that I am hiding under that sweet heart of yours hehe. Just try to find me again and you will realise that I never left that place.",
+    tired: "Oofo babe! You are the strongest and the most perfect I know of! Take some rest, and show the world that my loml is the best 🥺💗",
+    doubt: "Pfft! Doubt us? Babe you should doubt the world whether they can handle us together? We will be together and whatever it is, YOU ARE ALL MINE BITCH 🥺",
+    happy: "Awlelele, see that cute smile of yours. You look so so so perfect my one and only, keep that smile there and just be happy always."
+};
+
+function createHearts() {
+    const container = document.getElementById('heartsBg');
+    for (let i = 0; i < 16; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.top = Math.random() * 100 + '%';
+        heart.style.fontSize = (Math.random() * 30 + 18) + 'px';
+        heart.style.animationDelay = Math.random() * 20 + 's';
+        heart.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        container.appendChild(heart);
+    }
+}
+
+function attachClickableWords() {
+    const words = document.querySelectorAll('.clickable-word');
+    words.forEach(w => {
+        const id = Number(w.dataset.rabbit);
+        w.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (foundRabbits.has(id)) return;
+            w.classList.add('found');
+            spawnTrophy();
+            setTimeout(() => findRabbit(id), 650);
+        });
+    });
+}
+
+function spawnTrophy() {
+    const trophy = document.getElementById('trophy');
+    trophy.classList.add('show');
+    setTimeout(() => trophy.classList.remove('show'), 2000);
+}
+
+function findRabbit(id) {
+    if (foundRabbits.has(id)) return;
+    foundRabbits.add(id);
+    rabbitsFound++;
+    const counter = document.getElementById('rabbitCounter');
+    const count = document.getElementById('rabbitCount');
+    counter.style.display = 'block';
+    count.textContent = rabbitsFound;
+    showSecret(secretMessages[id]);
+    if (rabbitsFound === totalRabbits) {
+        setTimeout(() => {
+            const counterEl = document.getElementById('rabbitCounter');
+            counterEl.classList.add('complete');
+            counterEl.innerHTML = '🐰 Click me!';
+        }, 900);
+    }
+}
+
+function openFinalChallenge() {
+    if (rabbitsFound < totalRabbits) return;
+    const secretMsg = document.getElementById('secretMessage');
+    const overlay = document.getElementById('overlay');
+    secretMsg.innerHTML = `
+        <div style="padding: 10px;">
+            <div style="font-size: 1.4em; margin-bottom: 12px;">Final Question</div>
+            <p>Type the secret phrase you found hidden across this page to unlock your final birthday letter.</p>
+            <input id="quizAnswer" class="quiz-input" placeholder="Type the secret phrase here..." onkeypress="if(event.key==='Enter') checkAnswer()">
+            <div style="margin-top:12px;"><button onclick="checkAnswer()" style="background: linear-gradient(135deg, #ff5f7e, #ff9eb3); color: white; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer;">Submit</button></div>
+        </div>
+    `;
+    overlay.classList.add('show');
+    secretMsg.classList.add('show');
+    setTimeout(() => document.getElementById('quizAnswer').focus(), 400);
+}
+
+function checkAnswer() {
+    const answerEl = document.getElementById('quizAnswer');
+    if (!answerEl) return;
+    const answer = answerEl.value.trim().toLowerCase();
+    const correct = 'i love you so much babe';
+    const secretMsg = document.getElementById('secretMessage');
+    if (answer === correct) {
+        secretMsg.innerHTML = `
+            <div class="final-letter">
+                <h2 style="margin-bottom:12px;">Happy Birthday, Riya 🎉</h2>
+                <p>My dearest Ribun,</p>
+                <p>Today is your day, and even though distance sits between us for now, I wanted to wrap you in a little world of words and tiny surprises that remind you how loved you are. Every message, every hidden rabbit, every beat in my chest is for you.</p>
+                <p>You are my favorite person, my quiet in the noise, my constant in the chaos. I hope this page made you smile, giggle, and feel me close for a moment.</p>
+                <p>All my love, forever and always,</p>
+                <p style="margin-top:18px; font-weight:700;">— Your Devu 💗</p>
+                <hr style="margin:16px 0; border:none; height:1px; background: #ffd6df;">
+                <p style="font-weight:600;">Secret code (you found it!)</p>
+                <p style="background: #fff3f6; padding:10px; border-radius:8px; font-weight:700;">I love you so much babe</p>
+            </div>
+            <div style="margin-top:14px;"><button onclick="closeSecret()" style="background: linear-gradient(135deg, #ff5f7e, #ff9eb3); color: white; padding: 10px 20px; border-radius: 10px; border: none; cursor: pointer;">Close</button></div>
+        `;
+    } else {
+        wrongAttempts++;
+        const msg = wrongAnswers[Math.min(wrongAttempts - 1, wrongAnswers.length - 1)];
+        const input = document.getElementById('quizAnswer');
+        input.value = '';
+        input.placeholder = msg;
+        input.style.borderColor = '#ff5f7e';
+        setTimeout(() => { input.placeholder = 'Type the secret phrase here...'; input.style.borderColor = '#ff5f7e'; }, 2000);
+    }
+}
+
+function showSecret(message) {
+    const secretMsg = document.getElementById('secretMessage');
+    const overlay = document.getElementById('overlay');
+    secretMsg.innerHTML = `
+        <div style="padding: 10px;"><p style="margin-bottom:12px;">${message}</p><div style="margin-top:10px;"><button onclick="closeSecret()" style="background: linear-gradient(135deg, #ff5f7e, #ff9eb3); color: white; padding: 8px 18px; border-radius: 10px; border: none; cursor: pointer;">Close</button></div></div>
+    `;
+    overlay.classList.add('show');
+    secretMsg.classList.add('show');
+}
+
+function closeSecret() {
+    const secretMsg = document.getElementById('secretMessage');
+    const overlay = document.getElementById('overlay');
+    overlay.classList.remove('show');
+    secretMsg.classList.remove('show');
+    setTimeout(() => { secretMsg.innerHTML = ''; }, 300);
+}
+
+function showMessage(type) {
+    const box = document.getElementById('messageBox');
+    box.style.display = 'block';
+    box.innerText = messages[type];
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showPage(page) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => p.classList.remove('active'));
+    if (page === 'timeline') document.getElementById('timelinePage').classList.add('active'); else document.getElementById('mainPage').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.addEventListener('load', () => { createHearts(); attachClickableWords(); });
+</script>
+
+</body>
+</html>
